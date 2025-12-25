@@ -1,6 +1,5 @@
-const mongoose = require("mongoose")         //a package to connect node app with mongoDB
+const mongoose = require("mongoose")
 
-//creating schema( it is optional )
 const EmployeeSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -8,19 +7,8 @@ const EmployeeSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: [true, "Email address field is mandatory"]
-    },
-    phone: {
-        type: String,
-        required: [true, "Phone number field is mandatory"]
-    },
-    designation: {
-        type: String,
-        required: [true, "Designation field is mandatory"]
-    },
-    salary: {
-        type: Number,
-        required: [true, "Salary field is mandatory"]
+        required: [true, "Email address field is mandatory"],
+        unique: true
     },
     city: {
         type: String
@@ -28,14 +16,7 @@ const EmployeeSchema = new mongoose.Schema({
     state: {
         type: String
     }
-
 })
 
-//model: replica of database collection
-//creating model(use singular word)
-const Employee=new mongoose.model("Employee", EmployeeSchema)
-
-module.exports=Employee
-
-
-
+const Employee = mongoose.model("Employee", EmployeeSchema)
+module.exports = Employee

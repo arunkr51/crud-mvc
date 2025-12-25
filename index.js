@@ -1,18 +1,35 @@
-const express=require("express")
-const path=require("path")
-const hbs=require("hbs")
+const express = require("express")
+const path = require("path")
+const hbs = require("hbs")
 
-const Router=require("./routes/Router")
+const Router = require("./routes/Router")
 require("./db-connect")
 
-const app=express()
+const app = express()
+
+/* -------------------- Middleware -------------------- */
+
+// Body parser
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
+
+// Static files (optional but safe)
+app.use(express.static(path.join(__dirname, "public")))
+
+/* -------------------- View Engine -------------------- */
+
 app.set("view engine", "hbs")
- 
-app.use("/",Router)
+app.set("views", path.join(__dirname, "views"))
 
-hbs.registerPartials(path.join(__dirname+"/views/partials"))
+hbs.registerPartials(path.join(__dirname, "views", "partials"))
 
-app.listen(8000, ()=>{
-    console.log("server is running at http://localhost:8000/")
+/* -------------------- Routes -------------------- */
+
+app.use("/", Router)
+
+/* -------------------- Server -------------------- */
+
+const PORT = 8000
+app.listen(PORT, () => {
+    console.log(`Server is running at http://localhost:${PORT}/`)
 })
-

@@ -1,48 +1,174 @@
+// const Employee = require("../models/Employee")
+
+
+// async function homePage(req, res) {
+//     try {
+//         let data = await Employee.find()
+//         res.render("index", {
+//             data: data
+//         })
+//     } catch (error) {
+//         res.render("index", {
+//             data: []
+//         })
+//     }
+// }
+
+// function addPage(req, res) {
+//     res.render("add", {
+//         data:{}, 
+//         errorMessage: {
+//             name: "",
+//             email: "",
+//             phone: "",
+//             designation: "",
+//             salary: "",
+
+//         }
+//     })
+// }
+
+// async function storePage(req, res) {
+//     try {
+//         var data = new Employee(req.body)
+//         await data.save()
+//         res.redirect("/")
+//     } catch (error) {
+//         let errorMessage = {}
+//         error.errors?.name ? errorMessage.name = error.errors.name.message : ""
+//         error.errors?.email ? errorMessage.email = error.errors.email.message : ""
+//         error.errors?.phone ? errorMessage.phone = error.errors.phone.message : ""
+//         error.errors?.designation ? errorMessage.designation = error.errors.designation.message : ""
+//         error.errors?.salary ? errorMessage.salary = error.errors.salary.message : ""
+//         res.render("add", {
+//             data: data,
+//             errorMessage: errorMessage
+//         })
+//     }
+// }
+
+// async function deletePage(req, res) {
+//     try {
+//         await Employee.deleteOne({ _id: req.params._id })
+//         res.redirect("/")
+//     } catch (error) {
+//         res.redirect("/")
+//     }
+// }
+
+// async function editPage(req, res) {
+//     try {
+//         let data = await Employee.findOne({ _id: req.params._id })
+//         res.render("edit", {
+//             data: data
+//         })
+//     } catch (error) {
+//         res.redirect("/")
+//     }
+// }
+
+// async function updatePage(req, res) {
+//     try {
+//         var data = await Employee.findOne({ _id: req.params._id })
+//         data.name = req.body.name
+//         data.email = req.body.email
+//         data.phone = req.body.phone
+//         data.designation = req.body.designation
+//         data.salary = req.body.salary
+//         data.city = req.body.city
+//         data.state = req.body.state
+
+//         await data.save()
+//         res.redirect("/")   
+//     } catch (error) {
+//         let errorMessage = {}
+//         error.errors?.name ? errorMessage.name = error.errors.name.message : ""
+//         error.errors?.email ? errorMessage.email = error.errors.email.message : ""
+//         error.errors?.phone ? errorMessage.phone = error.errors.phone.message : ""
+//         error.errors?.designation ? errorMessage.designation = error.errors.designation.message : ""
+//         error.errors?.salary ? errorMessage.salary = error.errors.salary.message : ""
+//         res.render("edit", {
+//             data: data,
+//             errorMessage: errorMessage
+//         })
+//     }
+// }
+
+
+// module.exports = {
+//     homePage: homePage,
+//     addPage: addPage,
+//     storePage: storePage,
+//     deletePage: deletePage,
+//     editPage: editPage,
+//     updatePage: updatePage,
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const Employee = require("../models/Employee")
 
+function getErrorMessages(error) {
+    const errorMessage = {}
+
+    if (error.code === 11000) {
+        errorMessage.email = "Email already exists"
+    }
+
+    if (error.errors) {
+        Object.keys(error.errors).forEach((key) => {
+            errorMessage[key] = error.errors[key].message
+        })
+    }
+
+    return errorMessage
+}
 
 async function homePage(req, res) {
     try {
-        let data = await Employee.find()
-        res.render("index", {
-            data: data
-        })
-    } catch (error) {
-        res.render("index", {
-            data: []
-        })
+        const data = await Employee.find()
+        res.render("index", { data })
+    } catch {
+        res.render("index", { data: [] })
     }
 }
 
 function addPage(req, res) {
     res.render("add", {
-        data:{}, 
+        data: {},
         errorMessage: {
             name: "",
             email: "",
-            phone: "",
-            designation: "",
-            salary: "",
-
+            city: "",
+            state: ""
         }
     })
 }
 
 async function storePage(req, res) {
     try {
-        var data = new Employee(req.body)
+        const data = new Employee(req.body)
         await data.save()
         res.redirect("/")
     } catch (error) {
-        let errorMessage = {}
-        error.errors?.name ? errorMessage.name = error.errors.name.message : ""
-        error.errors?.email ? errorMessage.email = error.errors.email.message : ""
-        error.errors?.phone ? errorMessage.phone = error.errors.phone.message : ""
-        error.errors?.designation ? errorMessage.designation = error.errors.designation.message : ""
-        error.errors?.salary ? errorMessage.salary = error.errors.salary.message : ""
         res.render("add", {
-            data: data,
-            errorMessage: errorMessage
+            data: req.body,
+            errorMessage: getErrorMessages(error)
         })
     }
 }
@@ -50,56 +176,47 @@ async function storePage(req, res) {
 async function deletePage(req, res) {
     try {
         await Employee.deleteOne({ _id: req.params._id })
-        res.redirect("/")
-    } catch (error) {
+    } finally {
         res.redirect("/")
     }
 }
 
 async function editPage(req, res) {
     try {
-        let data = await Employee.findOne({ _id: req.params._id })
-        res.render("edit", {
-            data: data
-        })
-    } catch (error) {
+        const data = await Employee.findOne({ _id: req.params._id })
+        if (!data) return res.redirect("/")
+        res.render("edit", { data, errorMessage: {} })
+    } catch {
         res.redirect("/")
     }
 }
 
 async function updatePage(req, res) {
     try {
-        var data = await Employee.findOne({ _id: req.params._id })
-        data.name = req.body.name
-        data.email = req.body.email
-        data.phone = req.body.phone
-        data.designation = req.body.designation
-        data.salary = req.body.salary
-        data.city = req.body.city
-        data.state = req.body.state
-
-        await data.save()
-        res.redirect("/")   
+        await Employee.updateOne(
+            { _id: req.params._id },
+            {
+                name: req.body.name,
+                email: req.body.email,
+                city: req.body.city,
+                state: req.body.state
+            },
+            { runValidators: true }
+        )
+        res.redirect("/")
     } catch (error) {
-        let errorMessage = {}
-        error.errors?.name ? errorMessage.name = error.errors.name.message : ""
-        error.errors?.email ? errorMessage.email = error.errors.email.message : ""
-        error.errors?.phone ? errorMessage.phone = error.errors.phone.message : ""
-        error.errors?.designation ? errorMessage.designation = error.errors.designation.message : ""
-        error.errors?.salary ? errorMessage.salary = error.errors.salary.message : ""
         res.render("edit", {
-            data: data,
-            errorMessage: errorMessage
+            data: { ...req.body, _id: req.params._id },
+            errorMessage: getErrorMessages(error)
         })
     }
 }
 
-
 module.exports = {
-    homePage: homePage,
-    addPage: addPage,
-    storePage: storePage,
-    deletePage: deletePage,
-    editPage: editPage,
-    updatePage: updatePage,
+    homePage,
+    addPage,
+    storePage,
+    deletePage,
+    editPage,
+    updatePage
 }

@@ -1,69 +1,78 @@
 {{>header}}
-<title>CRUD - Home</title>
+<title>CRUD - Edit Employee</title>
 {{>navbar}}
-<div class="container-fluid my-3">
-     <h5 class="bg-dark p-2 text-light text-center">Update Employee Data</h5>
-     <form action="/update/{{data._id}}" method="post">
-          <div class="row">
-               <div class="col-12 mb-3">
-                    <label>Name*</label>
-                    <input type="text" name="name" placeholder="full name" value="{{data.name}}"
-                         class="form-control {{#if errorMessage.name}}border-danger{{else}}border-secondary{{/if}}">
-                    {{#if errorMessage.name}}
-                    <p class="text-danger">{{errorMessage.name}}</p>
-                    {{/if}}
-               </div>
 
-               <div class="col-md-6 mb-3">
-                    <label>Email*</label>
-                    <input type="email" name="email" placeholder="Enter your Email" value="{{data.email}}"
-                         class="form-control {{#if errorMessage.email}}border-danger{{else}}border-secondary{{/if}}">
-                    {{#if errorMessage.email}}
-                    <p class="text-danger">{{errorMessage.email}}</p>
-                    {{/if}}
-               </div>
-               <div class="col-md-6 mb-3">
-                    <label>Phone*</label>
-                    <input type="phone" name="phone" placeholder="Enter your Phone number" value="{{data.phone}}"
-                         class="form-control {{#if errorMessage.phone}}border-danger{{else}}border-secondary{{/if}}">
-                    {{#if errorMessage.phone}}
-                    <p class="text-danger">{{errorMessage.phone}}</p>
-                    {{/if}}
-               </div>
+<div class="container my-3">
+    <h5 class="bg-dark p-2 text-light text-center">
+        Update Employee Data
+    </h5>
 
-               <div class="col-md-6 mb-3">
-                    <label>designation*</label>
-                    <input type="text" name="designation" placeholder="Enter your Designation"
-                         value="{{data.designation}}"
-                         class="form-control {{#if errorMessage.designation}}border-danger{{else}}border-secondary{{/if}}">
-                    {{#if errorMessage.designation}}
-                    <p class="text-danger">{{errorMessage.designation}}</p>
-                    {{/if}}
-               </div>
-               <div class="col-md-6 mb-3">
-                    <label>Salary*</label>
-                    <input type="number" name="salary" placeholder="Enter your Salary" value="{{data.salary}}"
-                         class="form-control {{#if errorMessage.salary}}border-danger{{else}}border-secondary{{/if}}">
-                    {{#if errorMessage.salary}}
-                    <p class="text-danger">{{errorMessage.salary}}</p>
-                    {{/if}}
-               </div>
+    <form action="/update/{{data._id}}" method="post" novalidate>
+        <div class="row">
 
-               <div class="col-md-6 mb-3">
-                    <label>City</label>
-                    <input type="text" name="city" placeholder="Enter your City name" value="{{data.city}}"
-                         class="form-control border-secondary">
-               </div>
-               <div class="col-md-6 mb-3">
-                    <label>State</label>
-                    <input type="text" name="state" placeholder="Enter your State name" value="{{data.state}}"
-                         class="form-control border-secondary">
-               </div>
+            <!-- Name -->
+            <div class="col-12 mb-3">
+                <label class="form-label">Name *</label>
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="Full name"
+                    value="{{data.name}}"
+                    class="form-control {{#if errorMessage.name}}border-danger{{else}}border-secondary{{/if}}"
+                >
+                {{#if errorMessage.name}}
+                    <small class="text-danger">{{errorMessage.name}}</small>
+                {{/if}}
+            </div>
 
-               <div class="col-12 mb-3">
-                    <button type="submit" class="btn btn-dark text-light w-100">Update</button>
-               </div>
-          </div>
-     </form>
+            <!-- Email -->
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Email *</label>
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    value="{{data.email}}"
+                    class="form-control {{#if errorMessage.email}}border-danger{{else}}border-secondary{{/if}}"
+                >
+                {{#if errorMessage.email}}
+                    <small class="text-danger">{{errorMessage.email}}</small>
+                {{/if}}
+            </div>
+
+            <!-- City -->
+            <div class="col-md-6 mb-3">
+                <label class="form-label">City</label>
+                <input
+                    type="text"
+                    name="city"
+                    placeholder="Enter your city"
+                    value="{{data.city}}"
+                    class="form-control border-secondary"
+                >
+            </div>
+
+            <!-- State -->
+            <div class="col-12 mb-3">
+                <label class="form-label">State</label>
+                <input
+                    type="text"
+                    name="state"
+                    placeholder="Enter your state"
+                    value="{{data.state}}"
+                    class="form-control border-secondary"
+                >
+            </div>
+
+            <!-- Submit -->
+            <div class="col-12 mb-3">
+                <button type="submit" class="btn btn-dark w-100">
+                    Update
+                </button>
+            </div>
+
+        </div>
+    </form>
 </div>
+
 {{>footer}}
